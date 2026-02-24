@@ -69,14 +69,22 @@ class PostgresConnector(IExternalSourceConnector):
         """Gets a list of columns in tables or views in a batch."""
         # Every line here is a column that belongs to the table or to the view.
         # This SQL gets data from ALL the tables in a given schema.
-        return (f"SELECT c.table_name, c.column_name,  "
-                f"c.data_type, c.is_nullable, c.column_default as DATA_DEFAULT, '' as TABLE_COMMENT, '' as COLUMN_COMMENT "
-                f"FROM information_schema.columns c, "
-                f"information_schema.tables t "
-                f"WHERE c.table_schema = '{schema_name}' "
-                f"AND t.table_name = c.table_name AND t.table_schema = c.table_schema "
-                f"AND c.table_catalog = '{self._config['database']}' "
-                f"AND t.table_type = '{object_type}'")
+        return f"""
+SELECT c.table_name
+     , c.column_name
+     , c.data_type
+     , c.is_nullable
+     , c.column_default as DATA_DEFAULT
+     , OBJ_DESCRIPTION(CONCAT(t.table_schema, '.', c.table_name)::regclass) as TABLE_COMMENT
+     , COL_DESCRIPTION(CONCAT(t.table_schema, '.', c.table_name)::regclass, c.ordinal_position) as COLUMN_COMMENT
+FROM information_schema.columns c
+JOIN information_schema.tables t
+  ON c.table_name = t.table_name
+ AND c.table_schema = t.table_schema
+WHERE c.table_schema = '{schema_name}'
+  AND c.table_catalog = '{self._config["database"]}'
+  AND t.table_type = '{object_type}'
+"""
 
     def get_dataset(self, schema_name: str, entry_type: EntryType):
         """Gets data for a table or a view."""
