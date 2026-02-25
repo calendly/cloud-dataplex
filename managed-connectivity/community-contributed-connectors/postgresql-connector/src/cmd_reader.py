@@ -32,11 +32,11 @@ def read_args():
                         help="Dataplex Entry Group ID to import metadata into")
 
     # PostgreSQL specific arguments
-    parser.add_argument("--host", type=str, required=True,
+    parser.add_argument("--host", type=str, required=False,
         help="The PostgreSQL host server")
-    parser.add_argument("--port", type=int, required=True,
+    parser.add_argument("--port", type=int, required=False,
         help="The port number (usually 5432)")
-    parser.add_argument("--user", type=str, required=True, help="Postgres User")
+    parser.add_argument("--user", type=str, required=False, help="Postgres User")
     parser.add_argument("--password_secret", type=str, required=True,
         help=" Google Cloud Secret Manager ID for the Postgres password")
     parser.add_argument("--database", type=str, required=True,

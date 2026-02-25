@@ -15,6 +15,7 @@
 from src.common.gcs_uploader import checkDestination
 from src.common.secret_manager import get_password
 import argparse
+import json
 import sys
 import re
 import logging
@@ -40,8 +41,29 @@ def validateArguments(parsed_args):
     if parsed_args.password_secret is not None:
 
         validateSecretID(parsed_args.password_secret)
+        password = get_password(parsed_args.password_secret)
+        try:
+            secret_params = json.loads(password)
+            parsed_args.password = secret_params.get('password')
+            if parsed_args.host is None:
+                parsed_args.host = secret_params.get('host')
+            if parsed_args.user is None:
+                parsed_args.user = secret_params.get('user')
+            if parsed_args.port is None:
+                parsed_args.port = int(secret_params.get('port'))
+        except json.JSONDecodeError:
+            # not password - plaintext
+            parsed_args.password = password
 
-        parsed_args.password = get_password(parsed_args.password_secret)
+    # check that required values set from args or secret
+    if not parsed_args.password:
+        raise Exception('missing required password value')
+    if not parsed_args.host:
+        raise Exception('missing required host value')
+    if not parsed_args.user:
+        raise Exception('missing required user value')
+    if not parsed_args.port:
+        raise Exception('missing required port value')
 
     return parsed_args
 
