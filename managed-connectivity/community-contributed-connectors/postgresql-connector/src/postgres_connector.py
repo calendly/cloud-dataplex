@@ -75,8 +75,8 @@ SELECT c.table_name
      , c.data_type
      , c.is_nullable
      , c.column_default as DATA_DEFAULT
-     , OBJ_DESCRIPTION(CONCAT(t.table_schema, '.', c.table_name)::regclass) as TABLE_COMMENT
-     , COL_DESCRIPTION(CONCAT(t.table_schema, '.', c.table_name)::regclass, c.ordinal_position) as COLUMN_COMMENT
+     , OBJ_DESCRIPTION(CONCAT('"', t.table_schema, '"."', c.table_name, '"')::regclass) as TABLE_COMMENT
+     , COL_DESCRIPTION(CONCAT('"', t.table_schema, '"."', c.table_name, '"')::regclass, c.ordinal_position) as COLUMN_COMMENT
 FROM information_schema.columns c
 JOIN information_schema.tables t
   ON c.table_name = t.table_name
