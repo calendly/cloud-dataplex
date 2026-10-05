@@ -3,6 +3,11 @@
 This repository contains code and documentation for use with
 [Google Cloud Dataplex](https://cloud.google.com/dataplex/).
 
+## Calendly Fork
+
+This fork includes a few changes/fixes to the postgresql connector for
+use at Calendly. Deploy with `dandy deploy dataplex $env`.
+
 ## Samples in this Repository
  * `agents` provides generative AI-powered agents for automating Dataplex tasks.
  * `datascan` provides samples around Dataplex DataScans.

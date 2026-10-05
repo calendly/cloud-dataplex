@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM debian:11-slim
+FROM debian:13-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update && apt install -y procps tini
-RUN apt install -y wget
+RUN apt-get update && apt-get install -y procps tini wget
 
 ENV SPARK_EXTRA_JARS_DIR=/opt/spark/jars/
 RUN mkdir -p "${SPARK_EXTRA_JARS_DIR}"
